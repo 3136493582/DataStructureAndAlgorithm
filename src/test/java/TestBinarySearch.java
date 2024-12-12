@@ -20,8 +20,8 @@ public class TestBinarySearch {
         for(int i=0;i<100;i++){
             arr[i]=i;
         }
-        Assertions.assertEquals(25, BinarySearch.binarySearchBase(arr,25));
-        Assertions.assertEquals(-1, BinarySearch.binarySearchBase(arr,120));
-        Assertions.assertEquals(50, BinarySearch.binarySearchBase(arr,50));
+        Assertions.assertEquals(25, BinarySearch.binarySearchPlus(arr,25));
+        Assertions.assertEquals(-1, BinarySearch.binarySearchPlus(arr,120));
+        Assertions.assertEquals(50, BinarySearch.binarySearchPlus(arr,50));
     }
 }
