@@ -91,4 +91,91 @@ public class BinarySearch {
         }
         return -(low+1);//-1 是为了把索引 0 位置的插入点与找到的情况进行区分
     }
+
+    /**
+     *二分查找查找元素最左边的位置，可用来寻找前任的位置
+     * @param arr 传入的数组
+     * @param target 目标值
+     * @return   找到则返回最左边的位置，没找到返回负1
+     */
+    public static int binarySearchLeftMost(int[] arr, int target) {
+        int low = 0;
+        int high = arr.length - 1;
+        int candidate=-1;
+        while (low <= high) {
+            int mid = (low + high) >>>1;
+            if(target<arr[mid]) {
+                high = mid - 1;
+            }else if(target>arr[mid]) {
+                low = mid + 1;
+            }else {
+                candidate = mid;//记录候选位置
+                high = mid - 1;//继续向左
+            }
+        }
+        return candidate;
+    }
+
+    /**
+     *二分查找查找元素最左边的位置，可用来寻找后任的位置
+     * @param arr 传入的数组
+     * @param target 目标值
+     * @return  找到则返回最右边的位置，没找到返回负1
+     */
+    public static int binarySearchRightMost(int[] arr, int target) {
+        int low = 0;
+        int high = arr.length - 1;
+        int candidate=-1;
+        while (low <= high) {
+            int mid = (low + high) >>>1;
+            if(target<arr[mid]) {
+                high = mid - 1;
+            }else if (target>arr[mid]){
+                low=mid+1;
+            }else {
+                candidate=mid;//记录候选位置
+                low=mid+1;//继续向右
+            }
+        }return candidate;
+    }
+
+    /**
+     *二分查找查找元素最左边的位置进阶版本
+     * @param arr 传入的数组
+     * @param target 目标值
+     * @return 找到则返回地址，没找到返回插入地址
+     */
+    public static int binarySearchLeftMostPlus(int[] arr, int target) {
+        int low = 0;
+        int high = arr.length - 1;
+        while (low <= high) {
+            int mid = (low + high) >>>1;
+            if(target<=arr[mid]) {
+                high = mid - 1;
+            }else{
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+
+    /**
+     *二分查找查找元素最右边的位置进阶版本
+     * @param arr 传入的数组
+     * @param target 目标值
+     * @return 找到则返回地址，没找到返回插入地址,（返回插入地址有偏差）
+     */
+    public static int binarySearchRightMostPlus(int[] arr, int target) {
+        int low = 0;
+        int high = arr.length - 1;
+        while (low <= high) {
+            int mid = (low + high) >>>1;
+            if(target<arr[mid]) {
+               high=mid-1;
+            }else{
+               low=mid+1;
+            }
+        }
+        return low-1;
+    }
 }

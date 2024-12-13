@@ -45,4 +45,35 @@ public class TestBinarySearch {
         Assertions.assertEquals(1, BinarySearch.binarySearchJava(arr,0,8,5));
     }
 
+    @Test
+    void testBinarySearchLeftMost(){
+        int[] arr=new int[]{-1,5,8,8,8,8,9,9,9,9,15,15,15,15,25,45,77};
+        Assertions.assertEquals(2, BinarySearch.binarySearchLeftMost(arr,8));
+        Assertions.assertEquals(10, BinarySearch.binarySearchLeftMost(arr,15));
+        Assertions.assertEquals(-1, BinarySearch.binarySearchLeftMost(arr,40));
+    }
+
+    @Test
+    void testBinarySearchRightMost(){
+        int[] arr=new int[]{-1,5,8,8,8,8,9,9,9,9,15,15,15,15,25,45,77};
+        Assertions.assertEquals(5, BinarySearch.binarySearchRightMost(arr,8));
+        Assertions.assertEquals(13, BinarySearch.binarySearchRightMost(arr,15));
+        Assertions.assertEquals(-1, BinarySearch.binarySearchRightMost(arr,40));
+    }
+
+    @Test
+    void testBinarySearchLeftMostPlus(){
+        int[] arr=new int[]{-1,5,8,8,8,8,9,9,9,9,15,15,15,15,25,45,77};
+        Assertions.assertEquals(2, BinarySearch.binarySearchLeftMostPlus(arr,8));
+        Assertions.assertEquals(10, BinarySearch.binarySearchLeftMostPlus(arr,15));
+        Assertions.assertEquals(15, BinarySearch.binarySearchLeftMostPlus(arr,40));
+    }
+
+    @Test
+    void testBinarySearchRightMostPlus(){
+        int[] arr=new int[]{-1,5,8,8,8,8,9,9,9,9,15,15,15,15,25,45,77};
+        Assertions.assertEquals(5, BinarySearch.binarySearchRightMostPlus(arr,8));
+        Assertions.assertEquals(13, BinarySearch.binarySearchRightMostPlus(arr,15));
+        Assertions.assertEquals(2, BinarySearch.binarySearchRightMostPlus(arr,7));//（返回插入地址有偏差）
+    }
 }
