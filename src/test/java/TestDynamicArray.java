@@ -25,14 +25,14 @@ public class TestDynamicArray {
         dynamicArray.addLast(14);
 
 
-        //添加动态数组元素
- //       dynamicArray.add(2,3);
+//        添加动态数组元素
+        dynamicArray.add(2,3);
         //使用foreach方法遍历
  //       dynamicArray.foreach(element -> System.out.println(element));
 
         //删除动态数组元素
-//        int removed = dynamicArray.remove(5);
-//        System.out.println(removed);
+        int removed = dynamicArray.remove(5);
+        System.out.println(removed);
 
         //使用迭代器遍历
 //        for(Integer element:dynamicArray){
@@ -45,6 +45,7 @@ public class TestDynamicArray {
   //      System.out.println(dynamicArray.get());
         System.out.println("----------------------------");
 
+        dynamicArray.get(3);
 
         //使用stream流遍历
         dynamicArray.stream().forEach(System.out::println);

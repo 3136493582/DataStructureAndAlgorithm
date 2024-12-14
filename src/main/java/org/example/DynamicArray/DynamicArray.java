@@ -49,7 +49,7 @@ public class DynamicArray implements Iterable<Integer> {
     /**
      * [0-size]获取当前下标位置的数组元素
      *
-     * @param index
+     * @param
      * @return 当前下标元素
      */
     public int get(int index) {
