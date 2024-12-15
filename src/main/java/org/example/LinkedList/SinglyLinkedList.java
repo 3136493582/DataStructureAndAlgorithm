@@ -1,7 +1,6 @@
 package org.example.LinkedList;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 /**
@@ -29,7 +28,7 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * 单向链表添加头节点
-     * @param value
+     * @param value 要添加的值
      */
     public void addFirst(int value){
         //头节点为空
@@ -40,7 +39,7 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * while循环函数式接口
-     * @param consumer
+     * @param consumer 函数式接口对象
      */
     public void loop(Consumer<Integer> consumer){
         Node temp=head;//获取头指针
@@ -53,7 +52,7 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * for循环函数式接口
-     * @param consumer
+     * @param consumer 函数式接口对象
      */
     public void loop2(Consumer<Integer> consumer){
         for(Node temp=head;temp!=null;temp=temp.next){
@@ -92,7 +91,7 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * 遍历链表找到最后一个节点
-     * @return
+     * @return 最后一个节点
      */
     private Node findLast(){
         Node temp=head;
@@ -104,7 +103,7 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * 在链表末尾添加节点
-     * @param value
+     * @param value 要添加的值
      */
     public void addLast(int value){
         Node last=findLast();
@@ -117,8 +116,8 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * 根据索引查找节点
-     * @param index
-     * @return
+     * @param index 索引
+     * @return 节点
      */
     private Node findNode(int index){
         int insc=0;//索引值
@@ -132,8 +131,8 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * 根据索引获取节点值
-     * @param index
-     * @return
+     * @param index 索引
+     * @return 节点
      */
     public Integer getNodeValue(int index){
         Node node = findNode(index);
@@ -145,8 +144,8 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * 根据索引插入节点
-     * @param index
-     * @param value
+     * @param index 索引
+     * @param value 要添加的值
      */
     public void insert(int index,int value){
         if(index==0){
@@ -162,8 +161,8 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * 抛出不合法的索引异常
-     * @param index
-     * @return
+     * @param index 索引
+     * @return 不合法的索引提示信息
      */
     private static IllegalArgumentException illgalIndex(int index) {
         return new IllegalArgumentException(String.format("输入的索引[%d]不合法", index));
@@ -178,7 +177,7 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * 根据索引删除链表
-     * @param index
+     * @param index 索引 
      */
     public void remove(int index){
         if(index==0){
