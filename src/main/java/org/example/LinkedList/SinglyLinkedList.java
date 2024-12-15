@@ -62,7 +62,7 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * 迭代器遍历
-     * @return
+     * @return 返回被遍历的每项的值
      */
     @Override
     public Iterator<Integer> iterator() {
@@ -177,7 +177,7 @@ public class SinglyLinkedList implements Iterable<Integer> {
 
     /**
      * 根据索引删除链表
-     * @param index 索引 
+     * @param index 索引
      */
     public void remove(int index){
         if(index==0){
