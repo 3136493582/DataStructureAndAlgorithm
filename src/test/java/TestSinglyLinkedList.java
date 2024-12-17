@@ -15,7 +15,7 @@ public class TestSinglyLinkedList {
         singlyLinkedList.addFirst(5);
         singlyLinkedList.addFirst(6);
 
-//        SinglyLinkedList singlyLinkedList1 = new SinglyLinkedList();
+        SinglyLinkedList singlyLinkedList1 = new SinglyLinkedList();
 
 //        singlyLinkedList.loop(p->System.out.println(p));
 //        singlyLinkedList.loop(System.out::println);
@@ -36,13 +36,14 @@ public class TestSinglyLinkedList {
 //        singlyLinkedList.insert(2,4);
 //        singlyLinkedList.insert(8,4);
 //        singlyLinkedList1.insert(0,2);
+//        singlyLinkedList.loop(System.out::println);
 //        singlyLinkedList1.loop(System.out::println);
 
-        singlyLinkedList.loop(System.out::println);
+//        singlyLinkedList.loop(System.out::println);
 //        singlyLinkedList.removeFirst();
-        singlyLinkedList.remove(2);
-        System.out.println("---------------------------------");
-        singlyLinkedList.loop(System.out::println);
+//        singlyLinkedList.remove(0);
+//        System.out.println("---------------------------------");
+//        singlyLinkedList.loop(System.out::println);
 
 
     }
