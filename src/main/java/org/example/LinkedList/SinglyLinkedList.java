@@ -7,7 +7,7 @@ import java.util.function.Consumer;
  * 意向链表
  */
 public class SinglyLinkedList implements Iterable<Integer> {
-    private Node head=new Node(666,null);//头部指针
+    private static final Node head=new Node(666,null);//头部指针
 
 
     /**
