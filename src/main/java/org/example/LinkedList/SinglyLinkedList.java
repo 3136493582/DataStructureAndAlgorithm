@@ -165,7 +165,7 @@ public class SinglyLinkedList implements Iterable<Integer> {
      * @return 不合法的索引提示信息
      */
     private static IllegalArgumentException illgalIndex(int index) {
-        return new IllegalArgumentException(String.format("输入的索引[%d]不合法", index));
+        return new IllegalArgumentException(String.format("输入的索引[%d]不合法",index));
     }
 
     public void removeFirst(){
