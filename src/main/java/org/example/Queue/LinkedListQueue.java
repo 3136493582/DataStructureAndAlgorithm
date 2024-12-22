@@ -33,7 +33,7 @@ public class LinkedListQueue<E> implements Queue<E> {
     }
 
     /**
-     * 向队列尾部
+     * 向队列尾部添加
      *
      * @param e the element to add
      * @return

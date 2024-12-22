@@ -22,9 +22,9 @@ public class TestSinglyLinkedList {
 
 //        singlyLinkedList.loop2(System.out::println);
 
-//        for(Integer head : singlyLinkedList){//迭代器遍历
-//            System.out.println(head);
-//        }
+        for(Integer head : singlyLinkedList){//迭代器遍历
+            System.out.println(head);
+        }
 
 //        singlyLinkedList.addLast(0);
 //        singlyLinkedList.loop(System.out::println);
@@ -39,11 +39,11 @@ public class TestSinglyLinkedList {
 //        singlyLinkedList.loop(System.out::println);
 //        singlyLinkedList1.loop(System.out::println);
 
-        singlyLinkedList.loop(System.out::println);
-        singlyLinkedList.removeFirst();
-        singlyLinkedList.remove(0);
-        System.out.println("---------------------------------");
-        singlyLinkedList.loop(System.out::println);
+//        singlyLinkedList.loop(System.out::println);
+//        singlyLinkedList.removeFirst();
+//        singlyLinkedList.remove(0);
+//        System.out.println("---------------------------------");
+//        singlyLinkedList.loop(System.out::println);
 
 
     }
