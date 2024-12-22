@@ -11,14 +11,14 @@ import java.util.function.Consumer;
  */
 public class ArrayQueue<E> implements Queue<E> {
 
-    int head=0;
-    int tail=0;
-    private  final E[] array;
-    private final int length;
+    int head=0;//头指针
+    int tail=0;//尾指针
+    private  final E[] array;//定义空数组
+    private final int length;//定义逻辑长度
 
     @SuppressWarnings("all")//忽略所有警告
     public ArrayQueue(int capacity) {
-        length=capacity+1;
+        length=capacity+1;//最后一个位置存放尾指针
         array= (E[]) new Object[length];
     }
 
@@ -31,6 +31,10 @@ public class ArrayQueue<E> implements Queue<E> {
         return tail;
     }
 
+    /**
+     * 是否为空
+     * @return 头指针等于尾为空
+     */
     @Override
     public boolean isEmpty() {
         return head==tail;
