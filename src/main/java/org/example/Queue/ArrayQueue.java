@@ -115,7 +115,7 @@ public class ArrayQueue<E> implements Queue<E> {
     /**
      * 向队列尾部添加
      * @param e the element to add
-     * @return
+     * @return 队列已满返回false,添加成功返回true
      */
     @Override
     public boolean offer(E e) {
