@@ -152,6 +152,7 @@ public class ArrayQueue2<E> implements Queue<E>{
         if(isEmpty())
             return null;
          E e=array[head];
+         array[head]=null;
          head=(head+1)%capacity;
          size--;
         return e;

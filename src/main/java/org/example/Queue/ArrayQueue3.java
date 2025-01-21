@@ -3,41 +3,57 @@ package org.example.Queue;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Queue;
-import java.util.function.Consumer;
 
 /**
- * 环形数组实现的队列
+ *环形数组实现的队列
  * @param <E>
  */
-public class ArrayQueue<E> implements Queue<E> {
+public class ArrayQueue3<E> implements Queue<E> {
 
-    int head=0;//头指针
-    int tail=0;//尾指针
-    private  final E[] array;//定义空数组
-    private final int length;//定义逻辑长度
+    private int head = 0;//头指针
+    private int tail = 0;//尾指针
+    private int size = 0;//尺寸
+    private final E[] array;
+    private final int capacity;//容量
 
-    @SuppressWarnings("all")//忽略所有警告
-    public ArrayQueue(int capacity) {
-        length=capacity+1;//最后一个位置存放尾指针
-        array= (E[]) new Object[length];
+    /*如果传入的容量是2的阶乘，取模的值等于位与后容量的总位数-1位，使用位运算可以预防容易溢出*/
+    @SuppressWarnings("all")
+    public ArrayQueue3(int capacity) {
+        this.capacity=(int)(Math.log10(capacity-1)/Math.log10(2))+1;//将传入的值变成2的阶乘，不足的向上进行补足
+        /*capacity-=1;//将传入的值变成2的阶乘，不足的向上进行补足
+        capacity|=capacity>>1;
+        capacity|=capacity>>2;
+        capacity|=capacity>>4;
+        capacity|=capacity>>8;
+        capacity|=capacity>>16;
+        capacity+=1;*/
+        array = (E[])new Object[capacity];
     }
 
-    public boolean isFull(){
-        return (tail+1)%length==head;
-    }
-
+    /**
+     * 返回尺寸
+     * @return size
+     */
     @Override
     public int size() {
-        return tail;
+        return this.size;
     }
 
     /**
      * 是否为空
-     * @return 头指针等于尾为空
+     * @return 空返回true，
      */
     @Override
     public boolean isEmpty() {
-        return head==tail;
+        return size == 0;
+    }
+
+    /**
+     * 是否已满
+     * @return 已满返回true
+     */
+    public boolean isFull(){
+        return size==capacity;
     }
 
     @Override
@@ -46,22 +62,22 @@ public class ArrayQueue<E> implements Queue<E> {
     }
 
     /**
-     * 迭代器遍历
-     * @return 每一顶的值
+     * 迭代器遍历，返回每项的值
+     * @return 每项的值
      */
     @Override
     public Iterator<E> iterator() {
-        return new Iterator<E>() {
-            int index=head;
+        return new Iterator<>() {
+            private int index = head&capacity;
             @Override
             public boolean hasNext() {
-                return index!=tail;
+                return index<size;
             }
 
             @Override
             public E next() {
                 E e=array[index];
-                index=(index+1)%length;
+                index++;
                 return e;
             }
         };
@@ -113,16 +129,17 @@ public class ArrayQueue<E> implements Queue<E> {
     }
 
     /**
-     * 向队列尾部添加
+     *向队列尾添加值
      * @param e the element to add
-     * @return 队列已满返回false,添加成功返回true
+     * @return 添加成功返回true,添加失败返回false
      */
     @Override
     public boolean offer(E e) {
         if(isFull())
             return false;
-        array[tail]=e;
-        tail=(tail+1)%length;
+        array[tail&capacity] = e;
+        tail++;
+        size++;
         return true;
     }
 
@@ -132,18 +149,19 @@ public class ArrayQueue<E> implements Queue<E> {
     }
 
     /**
-     * 在头部获取值并删除
-     * @return 删除的值
+     * 获取队列头部值并删除
+     * @return 删除成功返回E e,删除失败返回null
      */
     @Override
     public E poll() {
         if(isEmpty())
             return null;
-        E e=array[head];
-        array[head]=null;
-        head=(head+1)%length;
+        E e = array[head&capacity];
+        array[head&capacity]=null;
+        head++;
         return e;
     }
+
 
     @Override
     public E element() {
@@ -151,23 +169,11 @@ public class ArrayQueue<E> implements Queue<E> {
     }
 
     /**
-     * 从头部获取值，不删除
-     * @return 有就返回头部值，没有返回null
+     * 获取头部的值
+     * @return 头部的值
      */
     @Override
     public E peek() {
-        if(isEmpty())
-            return null;
-        return array[head];
-    }
-
-    /**
-     * 循环遍历队列
-     * @param c The action to be performed for each element
-     */
-    public void forEach(Consumer<? super E> c) {
-        for(int index=head;index!=tail;index=(index+1)%length){
-            c.accept(array[index]);
-        }
+        return array[head&capacity];
     }
 }
