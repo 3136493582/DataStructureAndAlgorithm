@@ -81,6 +81,8 @@ public class AVLTree {
         AVLNode yellow=red.right;
         red.right=yellow.left;
         yellow.left=red;
+        updateHeight(red);
+        updateHeight(yellow);
         return yellow;
     }
 
@@ -98,6 +100,8 @@ public class AVLTree {
          */
         red.left = yellow.right;
         yellow.right = red;
+        updateHeight(red);
+        updateHeight(yellow);
         return yellow;
     }
 
