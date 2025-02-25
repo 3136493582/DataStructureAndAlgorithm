@@ -1,5 +1,11 @@
 package org.example.BinarySearchTree;
 
+/**
+ * 二叉搜索树（也称二叉排序树）是符合下面特征的二叉树：
+ *
+ * 1. 树节点增加 key 属性，用来比较谁大谁小，key 不可以重复
+ * 2. 对于任意一个树节点，它的 key 比左子树的 key 都大，同时也比右子树的 key 都小
+ */
 public class BSTTree1 {
     BSTNode root;
 
