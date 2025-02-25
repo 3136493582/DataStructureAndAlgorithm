@@ -71,6 +71,8 @@ public class BSTTree1 {
          */
         BSTTree1 tree = new BSTTree1(new BSTNode(4,4,new BSTNode(2,2,new BSTNode(1),new BSTNode(3)),new BSTNode(6,6,new BSTNode(5),null)));
         System.out.println(tree.root.value);
+
+
         System.out.println(tree.get(2));
     }
 }
