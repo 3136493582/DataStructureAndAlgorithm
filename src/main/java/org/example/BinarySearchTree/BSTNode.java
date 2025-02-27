@@ -6,7 +6,7 @@ public class BSTNode {
     BSTNode left;
     BSTNode right;
 
-    public BSTNode(int key){
+    public BSTNode(int key) {
         this.key = key;
         this.value = key;
     }
@@ -16,7 +16,7 @@ public class BSTNode {
         this.value = value;
     }
 
-    public BSTNode(int key, Object value, BSTNode left,BSTNode right) {
+    public BSTNode(int key, Object value, BSTNode left, BSTNode right) {
         this.key = key;
         this.value = value;
         this.left = left;
