@@ -340,9 +340,9 @@ public class RedBlackTree {
                 if(isBlack(deleted)){
                     //复杂调整
                     fixBlackBlack(deleted);
-                }else {
-                    //简单调整
                 }
+
+                //红色叶子无需任何处理
 
                 //删除逻辑
                 if(deleted.isLeftChild()){
@@ -371,11 +371,13 @@ public class RedBlackTree {
                 replaced.parent=parent;
                 deleted.parent=deleted.left=deleted.right=null;
 
+                //实际不会有这种情况 因为只有一个孩子时 被删除节点是黑色 那么剩余节点只能是红色不会触发双黑
                 if(isBlack(deleted)&&isBlack(replaced)){
                     //复杂处理
                     fixBlackBlack(replaced);
                 }else {
-                    //红色叶子，任何处理
+                    //// case 2 删除是黑，剩下是红
+                    replaced.color=Color.BLACK;
                 }
 
             }
