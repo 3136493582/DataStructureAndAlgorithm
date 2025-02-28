@@ -274,4 +274,213 @@ public class RedBlackTree {
             leftRotate(grandParent);
         }
     }
+
+    /**
+     * 查找要删除的节点
+     * @param key 要删除节点的key
+     * @return 有则返回节点，没有则返回null
+     */
+    private RBTreeNode find(int key) {
+        RBTreeNode p=root;
+        while (p != null) {
+            if(p.key<key){
+                p=p.left;
+            }else if(p.key>key){
+                p=p.right;
+            }else {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 查找剩余节点
+     * @param deleted 被删除的节点
+     * @return 返回被删除节点后剩余节点的后继节点
+     */
+    private RBTreeNode findReplaced(RBTreeNode deleted){
+       if(deleted.left==null&&deleted.right==null){
+           return null;
+       }
+
+       if(deleted.right==null){
+           return deleted.left;
+       }
+
+       if(deleted.left==null){
+           return deleted.right;
+       }
+
+       RBTreeNode s=deleted.right;
+       while (s.left!=null){
+           s=s.left;
+       }
+       return s;
+    }
+
+    public void remove(int key){
+        RBTreeNode deleted=find(key);
+        if(deleted==null){
+            return;
+        }
+        deRemove(deleted);
+    }
+
+    private void deRemove(RBTreeNode deleted) {
+        RBTreeNode replaced=findReplaced(deleted);
+        RBTreeNode parent=deleted.parent;
+        //没有孩子
+        if(replaced==null){
+            //case1 只有根节点
+            if(deleted==root){
+                root=null;
+            }else {
+                //case2 删除的是黑会失衡，红色不会失衡，删的是黑，剩下的是红，剩下的这个红节点变黑
+                if(isBlack(deleted)){
+                    //复杂调整
+                    fixBlackBlack(deleted);
+                }else {
+                    //简单调整
+                }
+
+                //删除逻辑
+                if(deleted.isLeftChild()){
+                    parent.left=null;
+                }else {
+                    parent.right=null;
+                }
+                deleted.parent=null;
+            }
+            return;
+        }
+        //一个孩子
+        if(replaced.left==null||replaced.right==null){
+            //case1 只有根节点
+            if(deleted==root){
+                root.key=replaced.key;
+                root.value=replaced.value;
+                root.left=root.right=null;
+            }else {
+                //删除逻辑
+                if(deleted.isLeftChild()){
+                    parent.left=replaced;
+                }else {
+                    parent.right=replaced;
+                }
+                replaced.parent=parent;
+                deleted.parent=deleted.left=deleted.right=null;
+
+                if(isBlack(deleted)&&isBlack(replaced)){
+                    //复杂处理
+                    fixBlackBlack(replaced);
+                }else {
+                    //红色叶子，任何处理
+                }
+
+            }
+            return;
+        }
+        //两个孩子=>有一个孩子或者没有孩子（李代桃僵技巧）
+        int k=deleted.key;
+        deleted.key=replaced.key;
+        replaced.key=k;
+
+        Object v=deleted.value;
+        deleted.value=replaced.value;
+        replaced.value=v;
+
+        deRemove(replaced);
+    }
+
+    /**
+     * 删除节点和剩下节点都是黑:black_circle:，触发双黑，双黑意思是：少了一个黑
+     * @param node 节点
+     */
+    private void fixBlackBlack(RBTreeNode node) {
+        if(node==root){
+            return;
+        }
+        RBTreeNode parent=node.parent;
+        RBTreeNode sibling=node.sibling();
+        /*case3 被调整节点的兄弟为红:red_circle:，此时两个侄子定为黑 :black_circle:
+         * 删除节点是左孩子，父亲左旋
+         * 删除节点是右孩子，父亲右旋
+         * 父亲和兄弟要变色，保证旋转后颜色平衡
+         * 旋转的目的是让黑侄子变为删除节点的黑兄弟，对删除节点再次递归，进入 case 4 或 case 5
+        */
+        if(isRed(sibling)){
+            if(node.isLeftChild()){
+                rightRotate(parent);
+            }else {
+                leftRotate(parent);
+            }
+            parent.color=Color.RED;
+            sibling.color=Color.BLACK;
+            fixBlackBlack(node);
+            return;
+        }
+
+        /*case 4：被调整节点的兄弟为黑:black_circle:，两个侄子都为黑 :black_circle:
+         * 将兄弟变红:red_circle:，目的是将删除节点和兄弟那边的黑色高度同时减少 1
+         * 如果父亲是红:red_circle:，则需将父亲变为黑，避免红红，此时路径黑节点数目不变
+         * 如果父亲是黑:black_circle:，说明这条路径还是少黑，再次让父节点触发双黑
+        */
+        if (sibling != null) {
+
+            if(isBlack(sibling.left)&&isBlack(sibling.right)){
+
+                if(isRed(parent)){
+                    parent.color=Color.RED;
+                }else {
+                    fixBlackBlack(parent);
+                }
+
+            }else {
+                /*case5 被调整节点的兄弟为黑:black_circle:，至少一个红:red_circle:侄子
+                 * 如果兄弟是左孩子，左侄子是红:red_circle:，LL 不平衡
+                 将来删除节点这边少个黑，所以最后旋转过来的父亲需要变成黑:black_circle:，平衡起见，左侄子也是黑:black_circle:
+                 原来兄弟要成为父亲，需要保留父亲颜色
+                 * 如果兄弟是左孩子，右侄子是红:red_circle:，LR 不平衡
+                 将来删除节点这边少个黑，所以最后旋转过来的父亲需要变成黑:black_circle:
+                 右侄子会取代原来父亲，因此它保留父亲颜色
+                 兄弟已经是黑了:black_circle:，无需改变
+                 * 如果兄弟是右孩子，右侄子是红:red_circle:，RR 不平衡
+                 将来删除节点这边少个黑，所以最后旋转过来的父亲需要变成黑:black_circle:，平衡起见，右侄子也是黑:black_circle:
+                 原来兄弟要成为父亲，需要保留父亲颜色
+                 如果兄弟是右孩子，左侄子是红:red_circle:，RL 不平衡
+                 * 将来删除节点这边少个黑，所以最后旋转过来的父亲需要变成黑:black_circle:
+                 左侄子会取代原来父亲，因此它保留父亲颜色
+                 兄弟已经是黑了:black_circle:，无需改变
+                */
+                if(sibling.isLeftChild()&&isRed(sibling.right)){//LL
+                    rightRotate(parent);
+                    sibling.left.color=Color.BLACK;
+                    sibling.color=Color.RED;
+                    parent.color=Color.BLACK;
+                } else if (sibling.isLeftChild()&&isRed(sibling.right)) {//LR
+                    sibling.right.color=parent.color;
+                    leftRotate(sibling);
+                    rightRotate(parent);
+                    parent.color=Color.BLACK;
+                } else if (!sibling.isLeftChild() && isRed(sibling.right)) {//RR
+                    leftRotate(parent);
+                    sibling.right.color=Color.BLACK;
+                    sibling.color=Color.RED;
+                    parent.color=Color.BLACK;
+                }else {//RL
+                    sibling.left.color=parent.color;
+                    rightRotate(sibling);
+                    leftRotate(parent);
+                    parent.color=Color.BLACK;
+                }
+            }
+
+
+        }else {
+            //实际也不会出现，触发双黑后，兄弟节点不会为 null
+            fixBlackBlack(parent);
+        }
+
+    }
 }
