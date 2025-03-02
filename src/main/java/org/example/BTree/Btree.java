@@ -107,7 +107,7 @@ public class Btree {
 
         //返回index孩子左边的兄弟
         Node childLeftSibling(int index){
-            return index>=0?children[index-1]:null;
+            return index>0?children[index-1]:null;
         }
 
         //返回index孩子右边的兄弟
@@ -153,6 +153,11 @@ public class Btree {
     //2、新增
     public void put(int key){
         doPut(root,key,null,0);
+    }
+
+    //是否能找到key
+    private boolean notFound(Node node,int key,int i){
+        return i>=node.keyNumber||(i<node.keyNumber&&node.keys[i]!=key);
     }
 
     /**
@@ -214,4 +219,111 @@ public class Btree {
         parent.insertChild(right,index+1);
     }
     //3、删除
+    public void remove(int key){
+        doRemove(root,key,null,0);
+    }
+
+    private void doRemove(Node node, int key, Node parent, int index) {
+        int i=0;
+        while (i<node.keyNumber){
+            if(node.keys[i]>=key){
+                break;
+            }
+            i++;
+        }
+
+        if(node.isLeaf){
+            if(notFound(node,key,i)){//case1、当前节点是叶子节点，没找到
+                return;
+            }
+            node.removeKey(i);//case2、当前节点是叶子节点，找到了
+        }else {
+            if(notFound(node,key,i)){//case3、前节点是非叶子节点，没找到
+                doRemove(node.children[i],key,node,i);
+            }else {//case 4、当前节点是非叶子节点，找到了
+                //找后继，李代桃僵手法，将后继叶子节点和当前被删除节点交换key值并往后删除指定key
+                Node s=node.children[i+1];
+                while (!s.isLeaf){
+                    s=s.children[0];
+                }
+                int k=s.keys[0];
+                node.keys[i]=k;
+                doRemove(node.children[i+1],k,node,i+1);
+            }
+        }
+
+        //case5、除后key数目<下限（不平衡)
+        if(node.keyNumber<MAX_KEY_NUMBER){
+            balance(node,parent,index);
+        }
+    }
+
+    /**
+     * 失衡调整
+     * @param node 当前节点
+     * @param parent 当前节点的父节点
+     * @param i 当前节点的索引
+     */
+    private void balance(Node node, Node parent, int i) {
+        if(node==root){
+            if(node.keyNumber==0&&node.children[0]!=null){//如果根节点没有key并且第一个孩子节点不为空，第一个孩子节点为根节点
+                root=node.children[0];
+            }
+            return;
+        }
+        Node leftSibling=parent.childLeftSibling(i);
+        Node rightSibling=parent.childRightSibling(i);
+        if(leftSibling!=null&&leftSibling.keyNumber>MAX_KEY_NUMBER){
+            //右旋转
+            rightRotate(node,leftSibling,parent,i);
+            return;
+        }
+        if(rightSibling!=null&&rightSibling.keyNumber>MAX_KEY_NUMBER){
+            //左旋转
+            leftRotate(node,rightSibling,parent,i);
+            return;
+        }
+        //左右两边都不够，合并
+        if(leftSibling!=null){
+            mergeToLeft(leftSibling,parent,i-1);
+        }else {
+            mergeToLeft(node,parent,i);
+        }
+    }
+
+    /**
+     * 左旋转
+     * @param node 当前节点
+     * @param rightSibling 当前节点的右兄弟
+     * @param parent 当前节点的父亲节点
+     * @param i 当前节点的索引
+     */
+    private void leftRotate(Node node,Node rightSibling,Node parent,int i) {
+        node.insert(parent.keys[i],node.keyNumber);
+        if(!rightSibling.isLeaf){//右兄弟的子树给左
+            node.insertChild(rightSibling.removeLeftMostChild(),node.keyNumber+1);
+        }
+        parent.keys[i]=rightSibling.removeLeftMostKey();
+    }
+
+    /**
+     * 右旋转
+     * @param node 当前节点
+     * @param leftSibling 当前节点的左兄弟
+     * @param parent 当前节点的父节点
+     * @param i 当前节点的索引
+     */
+    private void rightRotate(Node node,Node leftSibling,Node parent,int i) {
+        node.insert(parent.keys[i-1],0);
+        if(!leftSibling.isLeaf){//左兄弟的子树给右
+            node.insertChild(leftSibling.removeRightMostChild(),0);
+        }
+        parent.keys[i-1]=leftSibling.removeRightMostKey();
+    }
+
+    private void mergeToLeft(Node left,Node parent,int i) {
+        Node right=parent.removeChild(i+1);//右边兄弟节点
+        left.insert(parent.removeKey(i),left.keyNumber);//将父亲节点的i索引key插入到左边
+        right.moveToLeft(left);//将右边的节点插入到左边
+    }
 }
