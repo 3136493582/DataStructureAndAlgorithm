@@ -2,6 +2,9 @@ package org.example.BTree;
 
 import java.util.Arrays;
 
+/**
+ * B树
+ */
 public class Btree {
     Node root;
     int degree;//树中节点最小度数
