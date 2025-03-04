@@ -1,5 +1,9 @@
 package org.example.HashTable;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * hashtable第一版，不用hash算法生成hash值，使用数组索引当作hash值
  */
@@ -54,7 +58,7 @@ public class HashTable {
      * @param key 键
      * @param value 值
      */
-    void put(int hash, Object key, Object value) {
+    public void put(int hash, Object key, Object value) {
         int index=hash&(table.length-1);
         if(table[index]==null){
             //如果为空直接新增
@@ -80,7 +84,58 @@ public class HashTable {
     }
 
     private void resize() {
+        Entry[] newTable=new Entry[table.length<<1];//向右移一位等价于*2
+         /*
+                拆分链表，移动到新数组，拆分规律
+                * 一个链表最多拆成两个
+                * hash & table.length == 0 的一组
+                * hash & table.length != 0 的一组
+                                          p
+                0->8->16->24->32->40->48->null
+                            a
+                0->16->32->48->null
+                        b
+                8->24->40->null
+             */
+        for(int i=0;i<table.length;i++){//循环拿到每个hash表的表头
+            Entry p=table[i];//表头指针
+            if(p!=null){
+                Entry groupA=null;//A组尾插入指针
+                Entry groupB=null;//B组尾插入指针
+                Entry groupAHead=null;//A组头指针
+                Entry groupBHead=null;//B组头指针
+                while (p!=null){
+                    if((p.hash&table.length)==0){
+                        if(groupA!=null){
+                            groupA.next=p;
+                        }else {
+                            groupAHead=p;
+                        }
+                        groupA=p;
+                    }else {
+                        if(groupB!=null){
+                            groupB.next=p;
+                        }else {
+                            groupBHead=p;
+                        }
+                        groupB=p;
+                    }
+                    p=p.next;
+                }
+                //A组的表头索引位置不变，B组的表头索引位置为原index_+table.length
+                if(groupA!=null){
+                    groupA.next=null;
+                    newTable[i]=groupAHead;
+                }
+                if(groupB!=null){
+                    groupB.next=null;
+                    newTable[i+table.length]=groupBHead;
+                }
+            }
+        }
 
+        table=newTable;
+        threshold=(int)(loadFactor*table.length);
     }
 
     /**
@@ -115,5 +170,27 @@ public class HashTable {
             entry=entry.next;
         }
         return null;
+    }
+
+    /**
+     * 打印hash表的分散性
+     */
+    public void print(){
+        int[] sums=new int[table.length];
+        //拿到每个表头并统计每个链表的数目
+        for(int i=0;i<table.length;i++){
+            Entry p=table[i];
+            while(p!=null){
+                sums[i]++;
+                p=p.next;
+            }
+        }
+
+        System.out.println(Arrays.toString(sums));
+
+        //将sums数组收集到的数据进行分组统计
+        Map<Integer, Long> collect = Arrays.stream(sums).boxed().collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+
+        System.out.println(collect);
     }
 }
